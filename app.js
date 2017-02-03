@@ -76,7 +76,7 @@ app.post('/store', function(req, res) {
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
 			text = 'Track added: *' + track.name + '* by *' + track.artists[0].name + '*';
-			response_type = 'ephemeral';
+			response_type = 'in_channel';
 			res.send({
 			"response_type": response_type, "text": text})
             }, function(err) {
