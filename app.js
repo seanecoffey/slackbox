@@ -72,13 +72,14 @@ app.post('/store', function(req, res) {
           if (results.length === 0) {
             return res.send('Could not find that track.');
           }
-          var track = results[0];
+           var track = results[0];
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
-		  	text = 'Track added: *' + track.name + '* by *' + track.artists[0].name + '*' + ' Listen at: ' + process.env.SPOTIFY_PERMALINK;
-			response_type = 'in_channel';
-			res.send({
-			"response_type": response_type, "text": text})
+              var text = 'Track added: *' + track.name + '* by *' + track.artists[0].name + '*';
+              if (process.env.SPOTIFY_PERMALINK) text += ' (listen at: ' + process.env.SPOTIFY_PERMALINK + ' )';
+              return res.json( {'response_type': 'in_channel',
+                'text': text
+                });
             }, function(err) {
               return res.send(err.message);
             });
