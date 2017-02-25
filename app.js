@@ -43,15 +43,12 @@ app.get('/callback', function(req, res) {
     });
 });
 
-app.get('/refresh', function(req,res) {
-  spotifyApi.refreshAccessToken()
-  .then(function(data) {
-    if(spotifyApi.getAccessToken()) {
-      return res.send('You are logged in.');
-    }
-    else {
-      return res.send('<a href="/authorise">Authorise</a>')
-    }
+app.get('/refresh', function(req, res) {
+  spotifyApi.refreshAccessToken();
+  if (spotifyApi.getAccessToken()) {
+    return res.send('You are logged in.');
+  }
+  return res.send('<a href="/authorise">Authorise</a>');
 });
 
 app.use('/store', function(req, res, next) {
