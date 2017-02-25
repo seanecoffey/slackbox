@@ -18,6 +18,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.listen(3000, '0.0.0.0');
+
 app.get('/', function(req, res) {
   if (spotifyApi.getAccessToken()) {
     return res.send('You are logged in.');
@@ -51,6 +53,26 @@ app.get('/refresh', function(req, res) {
   return res.send('<a href="/authorise">Authorise</a>');
 });
 
+function sendToSlack (s, sendURL) {
+	var payload = {
+		response_type: 'in_channel',
+		text: s
+		};
+	var theRequest = {
+		url: sendURL,
+		method: "POST",
+		json: payload
+		};
+	request (theRequest, function (error, response, body) {
+		if (!error && (response.statusCode == 200)) {
+			console.log ("sendToSlack: " + s);
+			}
+		else {
+			console.log ("sendToSlack: error, code == " + response.statusCode + ", " + response.body + ".\n");
+			}
+		});
+	}
+
 app.use('/store', function(req, res, next) {
   if (req.body.token !== process.env.SLACK_TOKEN) {
     return res.status(500).send('Cross site request forgerizzle!');
@@ -59,7 +81,9 @@ app.use('/store', function(req, res, next) {
 });
 
 app.post('/store', function(req, res) {
-  spotifyApi.refreshAccessToken()
+	var response_url = req.body.response_url;
+	res.send ('working...');
+	spotifyApi.refreshAccessToken()
     .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
       if (data.body['refresh_token']) { 
@@ -84,10 +108,8 @@ app.post('/store', function(req, res) {
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
               var text = 'Track added: *' + track.name + '* by *' + track.artists[0].name + '*';
-              if (process.env.SPOTIFY_PERMALINK) text += ' - <' + process.env.SPOTIFY_PERMALINK + '| Listen Here!>';
-              return res.json( {'response_type': 'in_channel',
-                'text': text
-                });
+			if (process.env.SPOTIFY_PERMALINK) text += ' - <' + process.env.SPOTIFY_PERMALINK + '| Listen Here!>';
+              sendToSlack(text, response_url)
             }, function(err) {
               return res.send(err.message);
             });
