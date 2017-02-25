@@ -53,9 +53,9 @@ app.get('/refresh', function(req, res) {
   return res.send('<a href="/authorise">Authorise</a>');
 });
 
-function sendToSlack (s, sendURL) {
+function sendToSlack (s, sendURL, responseType) {
 	var payload = {
-		response_type: 'in_channel',
+		response_type: responseType,
 		text: s
 		};
 	var theRequest = {
@@ -82,7 +82,7 @@ app.use('/store', function(req, res, next) {
 
 app.post('/store', function(req, res) {
 	var response_url = req.body.response_url;
-	res.send ('working...');
+	res.send ('workin dat pole...');
 	spotifyApi.refreshAccessToken()
     .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
@@ -90,7 +90,8 @@ app.post('/store', function(req, res) {
         spotifyApi.setRefreshToken(data.body['refresh_token']);
       }
       if (req.body.text.trim().length === 0) {
-          return res.send('Enter the name of a song and the name of the artist, separated by a "-"\nExample: Blue (Da Ba Dee) - Eiffel 65');
+          sendToSlack('Enter the name of a song and the name of the artist, separated by a "-"\nExample: Blue (Da Ba Dee) - Eiffel 65', response_url, 'ephemeral');
+		  return;
       }
       if (req.body.text.indexOf(' - ') === -1) {
         var query = 'track:' + req.body.text;
@@ -102,22 +103,27 @@ app.post('/store', function(req, res) {
         .then(function(data) {
           var results = data.body.tracks.items;
           if (results.length === 0) {
-            return res.send('Could not find that track.');
+            sendToSlack('Could not find that track.', response_url, 'ephemeral');
+			return;
           }
            var track = results[0];
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
               var text = 'Track added: *' + track.name + '* by *' + track.artists[0].name + '*';
 			if (process.env.SPOTIFY_PERMALINK) text += ' - <' + process.env.SPOTIFY_PERMALINK + '| Listen Here!>';
-              sendToSlack(text, response_url)
+              sendToSlack(text, response_url, 'in_channel');
+			  return;
             }, function(err) {
-              return res.send(err.message);
+              sendToSlack(err.message, response_url, 'ephemeral');
+			  return;
             });
         }, function(err) {
-          return res.send(err.message);
+          sendToSlack(err.message, response_url, 'ephemeral');
+		  return;
         });
     }, function(err) {
-      return res.send('Could not refresh access token. You probably need to re-authorise yourself from your app\'s homepage.');
+      sendToSlack('Could not refresh access token. You probably need to re-authorise yourself from your app\'s homepage.',response_url, 'ephemeral');
+	  return;
     });
 });
 
