@@ -82,6 +82,8 @@ app.use('/store', function(req, res, next) {
 
 app.post('/store', function(req, res) {
 	var response_url = req.body.response_url;
+	var userID = req.body.user_id;
+	var userName = req.body.user_name;
 	res.send ('workin dat pole...');
 	spotifyApi.refreshAccessToken()
     .then(function(data) {
@@ -109,7 +111,7 @@ app.post('/store', function(req, res) {
            var track = results[0];
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
-              var text = 'Track added: *' + track.name + '* by *' + track.artists[0].name + '*';
+              var text = '<@' + userID + '|' + userName + '> added a track: *' + track.name + '* by *' + track.artists[0].name + '*';
 			if (process.env.SPOTIFY_PERMALINK) text += ' - <' + process.env.SPOTIFY_PERMALINK + '| Listen Here!>';
               sendToSlack(text, response_url, 'in_channel');
 			  return;
