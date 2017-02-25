@@ -45,7 +45,7 @@ app.get('/callback', function(req, res) {
 
 app.get('/refresh', function(req,res) {
   spotifyApi.refreshAccessToken()
-}
+});
 
 app.use('/store', function(req, res, next) {
   if (req.body.token !== process.env.SLACK_TOKEN) {
