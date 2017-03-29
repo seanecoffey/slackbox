@@ -1,39 +1,22 @@
 # slackbox
-Spotify playlist collaboration through Slack. Brought to you by the lovely people at [Benchmark](http://benchmark.co.uk).
+Checkout the readme at the original version from the guys at [Benchmark](https://github.com/benchmarkstudios/slackbox) for more specific info.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-Simply create a Slash Command, such as `/jukebox`, which accepts a track name (also the artist too for a less fuzzy search) to add to a pre-defined Spotify playlist:
+Simply create a Slash Command, such as `/playlist`, which accepts a track name (also the artist too for a less fuzzy search) to add to a pre-defined Spotify playlist:
 
-    /jukebox Bell Biv DeVoe – Poison
+    /playlist Bell Biv DeVoe – Poison
 
-##Installation
+## Changes to Original
 
-First you'll want to create your Slack Slash Command, which you can do by going to your [Slash Commands page](https://my.slack.com/services/new/slash-commands).
+I've altered this to do a couple of things differently to the original slackbox:
+ - Due to timeout errors randomly occurring (slack needs to receive a response within 3000ms of invocation), I've added an ephemeral response as soon as a request is detected (before the Spotify search) By default this currently says "What is your damage @slackusername?". 
+ - Once the song has been added, a post to the slack channel 'in_channel' is made with the user that added the track, and a spotify URI link to the current playlist. 
+ 
+![Alt text](http://puu.sh/v1VIM/0fa902a8e7.png "Sample use")
 
-During setup, have your slash command submit a POST to your app's `/store` endpoint, e.g. `https://app-name.herokuapp.com/store`.
-
-Make a note of the `token`, as you'll need it later to help guard against cross-site request forgery.
-
-###Spotify
-
-Head over to [Spotify's Developer Site](http://developer.spotify.com) and create a new Application. Make sure you add whatever slackbox's callback URI as a valid callback URI. If you're running locally, this will be `http://localhost:5000/callback` or on Heroku `https://app-name.herokuapp.com/callback`
-
-Make a note of the `key`, `secret` and `callback URI` too, as you'll need these later as well.
-
-Also, don't forget to make a playlist. If you do this through [Spotify's web interface](http://play.spotify.com) then the `playlist identifier` will be the last segment of the URI - make a note of this too! If there's a better way of finding this out, we're all ears. If you do this through the app, right-click the playlist to get it's web URL and again, you need the last segment of the URI.
-
-###Environment variables
-
-Once you've cloned slackbox or hit the "Deploy with Heroku" button you'll need to setup the following environment variables. These can either be stored in a `.env` or set up as config variables in Heroku.
-
-* `SLACK_TOKEN` - The token from Slack's Slash Command.
-* `SPOTIFY_KEY` - Your Spotify application key (a.k.a Client ID).
-* `SPOTIFY_SECRET` - Your Spotify application secret (a.k.a Client Secret).
-* `SPOTIFY_USERNAME` - Your Spotify username.
-* `SPOTIFY_PLAYLIST_ID` - Your playlist identifier.
-* `SPOTIFY_REDIRECT_URI` - URI to redirect to once your user has allowed the application's permissions.
-
-###Authentication
-
-Visit your slackbox's home page to authenticate yourself with Spotify and you should be all set!
+## Intended improvements
+Over time I'm looking to extend the functionality by adding the following:
+ - add option to delete tracks
+ - add option to add tracks by url 
+ - option to search for a spotify track using a youtube / soundcloud link 
