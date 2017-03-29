@@ -13,7 +13,9 @@ I've altered this to do a couple of things differently to the original slackbox:
  - Due to timeout errors randomly occurring (slack needs to receive a response within 3000ms of invocation), I've added an ephemeral response as soon as a request is detected (before the Spotify search) By default this currently says "What is your damage @slackusername?". 
  - Once the song has been added, a post to the slack channel 'in_channel' is made with the user that added the track, and a spotify URI link to the current playlist. 
  
-![Alt text](http://puu.sh/v1VIM/0fa902a8e7.png "Sample use")
+ <p align="center">
+  <img src="http://puu.sh/v1VIM/0fa902a8e7.png" alt="Sample use"/>
+</p>
 
 ## Intended improvements
 Over time I'm looking to extend the functionality by adding the following:
