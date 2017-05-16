@@ -10,9 +10,15 @@ Simply create a Slash Command, such as `/playlist`, which accepts a command, and
     /playlist add - hazel english - make it better
 
 ## Sample Use
+
+Adding a song:
+
  <p align="center">
   <img src="https://puu.sh/vRwG3/8a90c476c6.png" alt="Sample use"/>
 </p>
+
+Removing a song:
+
 <p align="center">
   <img src="https://puu.sh/vRwHp/fb5d7ec957.png" alt="Sample use"/>
 </p>
