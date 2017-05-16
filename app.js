@@ -148,10 +148,13 @@ app.post('/store', function(req, res) {
            var track = results[0];
 		   switch(operation) {
 			   case 'add':
-				  spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
+				  spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' 
+																 + track.id])
 					.then(function(data) {
-					  var text = '<@' + userID + '|' + userName + '> added <spotify:track:'+track.id+'|*' + track.name + '* by *' + track.artists[0].name + '*> to the playlist ';
-					if (process.env.SPOTIFY_PERMALINK) text += '<' + process.env.SPOTIFY_PERMALINK + '|'+process.env.PLAYLIST_NAME+'>';
+					  var text = '<@' + userID + '|' + userName + '> added <spotify:track:'+track.id+'|*' + track.name + '* by *' 
+					  + track.artists[0].name + '*> to the playlist ';
+					if (process.env.SPOTIFY_PERMALINK) text += '<spotify:user:' + process.env.SPOTIFY_USERNAME+':playlist:'
+						+process.env.SPOTIFY_PLAYLIST_ID+'K + '|'+process.env.PLAYLIST_NAME+'>';
 					  sendToSlack(text, response_url, 'in_channel');
 					  return;
 					}, function(err) {
@@ -175,7 +178,8 @@ app.post('/store', function(req, res) {
 					break;
 				//create a button for looking up and sharing a song before adding it to the playlist	
 				case 'share': 
-						var text = '<@' + userID + '|' + userName + '> shared <spotify:track:'+track.id+'|*' + track.name + '* by *' + track.artists[0].name + '*> but has not added it to the playlist';
+						var text = '<@' + userID + '|' + userName + '> shared <spotify:track:'+track.id+'|*' 
+						+ track.name + '* by *' + track.artists[0].name + '*> but has not added it to the playlist';
 					//create a slack message attachment to trigger option to add song to playlist (incomplete)	
 				   var attachments =  [{
 							"fallback": "Would you like to add this to the playlist?",
@@ -200,7 +204,8 @@ app.post('/store', function(req, res) {
 		  return;
         });
     }, function(err) {
-      sendToSlack('Could not refresh access token. You probably need to re-authorise yourself from your <'+process.env.APP_URL+' | app\'s homepage.>',response_url, 'ephemeral');
+      sendToSlack('Could not refresh access token. You probably need to re-authorise yourself from your <'+process.env.APP_URL+
+		  ' | app\'s homepage.>',response_url, 'ephemeral');
 	  return;
     });
 });
