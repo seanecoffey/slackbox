@@ -1,24 +1,29 @@
 # slackbox
-Checkout the readme at the original version from the guys at [Benchmark](https://github.com/benchmarkstudios/slackbox) for more specific info.
+Checkout the readme at the original version from the guys at [Benchmark](https://github.com/benchmarkstudios/slackbox) for better installation info.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-Simply create a Slash Command, such as `/playlist`, which accepts a track name (also the artist too for a less fuzzy search) to add to a pre-defined Spotify playlist:
+Simply create a Slash Command, such as `/playlist`, which accepts a command, and a track and artist name, in the form
+    
+    /playlist command - artist - song
+    i.e.
+    /playlist add - hazel english - make it better
 
-    /playlist Bell Biv DeVoe – Poison
-
-## Changes to Original
-
-I've altered this to do a couple of things differently to the original slackbox:
- - Due to timeout errors randomly occurring (slack needs to receive a response within 3000ms of invocation), I've added an ephemeral response as soon as a request is detected (before the Spotify search) By default this currently says "What is your damage @slackusername?". 
- - Once the song has been added, a post to the slack channel 'in_channel' is made with the user that added the track, and a spotify URI link to the current playlist. 
- 
+## Sample Use
+This example is outdated.
  <p align="center">
-  <img src="http://puu.sh/v1VIM/0fa902a8e7.png" alt="Sample use"/>
+  <img src="https://puu.sh/vRwG3/8a90c476c6.png" alt="Sample use"/>
+</p>
+<p align="center">
+  <img src="https://puu.sh/vRwHp/fb5d7ec957.png" alt="Sample use"/>
 </p>
 
+
 ## Intended improvements
-Over time I'm looking to extend the functionality by adding the following:
- - add option to delete tracks
- - add option to add tracks by url 
- - option to search for a spotify track using a youtube / soundcloud link 
+Looking to extend the functionality:
+ - convert to a BOT instead of a slash command!
+ - parse songs via URLs / URIs from spotify, bandcamp, soundcloud etc and present interactive buttons to add to playlist
+ - option for BOT to create playlists and then update the current collaborative playlist, or overwrite which playlist is being written to
+ - improve authorisation UI
+ - use BOT as a jukebox, i.e. play - track will control the logged in account
+ 
